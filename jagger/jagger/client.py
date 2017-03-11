@@ -66,6 +66,7 @@ def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
         # also change the counter
         counter, should_skip = check_counter_and_skip(counter, skip_cicle)
         if should_skip:
+            logger.debug("skipping: %s" % msg)
             continue
         udp.sendto(msg.encode('UTF-8'), dest)
 
