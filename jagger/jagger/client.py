@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
 import socket
@@ -85,3 +86,10 @@ def run(host, port=8765, moves_proccessor=default_moves_proccessor):
     finally:
         udp.sendto(END_MSG, dest)
         udp.close()
+
+
+if __name__ == '__main__':
+    import sys
+    host = sys.args[1]
+    # port = sys.args[2]
+    run(host)
