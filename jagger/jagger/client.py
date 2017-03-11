@@ -90,6 +90,6 @@ def run(host, port=8765, moves_proccessor=default_moves_proccessor):
 
 if __name__ == '__main__':
     import sys
-    host = sys.args[1]
+    host = sys.argv[1]
     # port = sys.args[2]
     run(host)
