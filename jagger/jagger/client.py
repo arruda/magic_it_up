@@ -67,7 +67,7 @@ def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
         counter, should_skip = check_counter_and_skip(counter, skip_cicle)
         if should_skip:
             continue
-        udp.sendto(msg, dest)
+        udp.sendto(msg.encode('UTF-8'), dest)
 
 
 def default_moves_proccessor():
@@ -84,7 +84,7 @@ def run(host, port=8765, moves_proccessor=default_moves_proccessor):
     except Exception as e:
         logger.exception(e)
     finally:
-        udp.sendto(END_MSG, dest)
+        udp.sendto(END_MSG.encode('UTF-8'), dest)
         udp.close()
 
 
