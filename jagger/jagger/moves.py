@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 import keyboard
 
-ALLOWED_KEYS = [
-    'q',
-    'e',
-    's',
-    'z',
-    'c',
-    '',
-]
-
+from constants import ALLOWED_KEYS
 
 PRESSED_KEYS = set([
 ])
 
 
 def initialize_keyboard():
+    keyboard.wait('esc')
     keyboard.press_and_release('esc')
     keyboard.press_and_release('esc')
 

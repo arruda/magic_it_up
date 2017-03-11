@@ -2,8 +2,14 @@
 import datetime
 import socket
 import random
+import logging
 
-from moves import ALLOWED_KEYS
+from constants import MSG_DATE_SEP, END_MSG, ALLOWED_KEYS
+
+
+logging.basicConfig(filename='jagger_client.log', level=logging.DEBUG)
+
+logger = logging.getLogger("jagger_client")
 
 
 def check_counter_and_skip(counter, skip_cicle=(1, 3)):
@@ -44,14 +50,15 @@ def check_counter_and_skip(counter, skip_cicle=(1, 3)):
 
 def prepare_msg(keys):
     now = datetime.datetime.utcnow().isoformat()
-    msg = "%s>>>:%s" % (now, keys)
+    str_keys = "".join(keys)
+    msg = "%s%s%s" % (now, MSG_DATE_SEP, str_keys)
     return msg
 
 
-def main_loop_controller(udp, dest, moves_processor, skip_cicle=(1, 3)):
+def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
     counter = 0
     while True:
-        keys = moves_processor()
+        keys = moves_proccessor()
         msg = prepare_msg(keys)
 
         # should ignore a fragtion of the messages represented the skip cicle
@@ -62,19 +69,19 @@ def main_loop_controller(udp, dest, moves_processor, skip_cicle=(1, 3)):
         udp.sendto(msg, dest)
 
 
-def default_moves_processor():
+def default_moves_proccessor():
     num_active_pads = random.randint(0, 2)
     keys = random.sample(ALLOWED_KEYS, num_active_pads)
     return keys
 
 
-def run(host, port=8765, moves_processor=default_moves_processor):
+def run(host, port=8765, moves_proccessor=default_moves_proccessor):
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     dest = (host, port)
     try:
-        main_loop_controller(udp, dest, moves_processor)
-    except:
-        pass  #log
+        main_loop_controller(udp, dest, moves_proccessor)
+    except Exception as e:
+        logger.exception(e)
     finally:
-        udp.sendto("THEEND", dest)
+        udp.sendto(END_MSG, dest)
         udp.close()
