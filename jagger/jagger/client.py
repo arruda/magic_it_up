@@ -69,6 +69,7 @@ def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
             logger.debug("skipping: %s" % msg)
             continue
         udp.sendto(msg.encode('UTF-8'), dest)
+        logger.debug("sent: %s" % msg)
 
 
 def default_moves_proccessor():
