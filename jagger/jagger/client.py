@@ -73,6 +73,8 @@ def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
 def default_moves_proccessor():
     num_active_pads = random.randint(0, 2)
     keys = random.sample(ALLOWED_KEYS, num_active_pads)
+    import time
+    time.sleep(0.1)
     return keys
 
 

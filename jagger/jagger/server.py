@@ -62,11 +62,12 @@ class JaggerServer(object):
             self.avg_delay = (self.avg_delay + new_avg) / 2
             self.total_delay = 0
             self.total_msgs = 0
-            logger.debug("Delay: min: {} max: {} avg: {}".format(
-                self.min_delay,
-                self.max_delay,
-                self.avg_delay
-            ))
+        logger.debug("Delay: current: {} min: {} max: {} avg: {}".format(
+            time_delay,
+            self.min_delay,
+            self.max_delay,
+            self.avg_delay
+        ))
 
     def main_loop_controller(self, udp):
         while True:
@@ -87,7 +88,7 @@ class JaggerServer(object):
         except Exception as e:
             logger.exception(e)
         finally:
-            print('close')
+            logger.debug("close")
             udp.close()
 
 
