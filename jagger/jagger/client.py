@@ -4,6 +4,7 @@ import datetime
 import socket
 import random
 import logging
+import time
 
 from constants import MSG_DATE_SEP, END_MSG, ALLOWED_KEYS
 
@@ -56,7 +57,9 @@ def prepare_msg(keys):
     return msg
 
 
-def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
+def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 4)):
+    num_resend_msgs = 0
+    last_keys = None
     counter = 0
     while True:
         keys = moves_proccessor()
@@ -64,18 +67,28 @@ def main_loop_controller(udp, dest, moves_proccessor, skip_cicle=(1, 3)):
 
         # should ignore a fragtion of the messages represented the skip cicle
         # also change the counter
-        counter, should_skip = check_counter_and_skip(counter, skip_cicle)
+        #counter, should_skip = check_counter_and_skip(counter, skip_cicle)
+        should_skip = False
+        if keys == last_keys:
+            if num_resend_msgs >= 1:
+                should_skip = True
+            else:
+                num_resend_msgs += 1
+                time.sleep(0.005)
+        else:            
+                num_resend_msgs = 0
         if should_skip:
-            logger.debug("skipping: %s" % msg)
+            #logger.debug("skipping: %s" % msg)
+            time.sleep(0.005)
             continue
         udp.sendto(msg.encode('UTF-8'), dest)
         logger.debug("sent: %s" % msg)
+        last_keys = list(keys)
 
 
 def default_moves_proccessor():
     num_active_pads = random.randint(0, 2)
     keys = random.sample(ALLOWED_KEYS, num_active_pads)
-    import time
     time.sleep(0.1)
     return keys
 
