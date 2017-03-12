@@ -8,7 +8,7 @@ import logging
 import dateutil.parser
 
 from constants import MSG_DATE_SEP, END_MSG
-# from moves import initialize_keyboard, press_keys
+from moves import initialize_keyboard, press_keys
 
 logging.basicConfig(filename='jagger_server.log', level=logging.DEBUG)
 logger = logging.getLogger("jagger_server")
@@ -45,8 +45,7 @@ class JaggerServer(object):
         time_delay = time_delay.total_seconds() * 1000
 
         keys = [key for key in msg]
-        # logger.debug("pressed keys: %s" % keys
-        # press_keys(keys)
+        press_keys(keys)
         return time_delay
 
     def calculate_stats_on_delay(self, time_delay):
@@ -62,12 +61,12 @@ class JaggerServer(object):
             self.avg_delay = (self.avg_delay + new_avg) / 2
             self.total_delay = 0
             self.total_msgs = 0
-        logger.debug("Delay: current: {} min: {} max: {} avg: {}".format(
-            time_delay,
-            self.min_delay,
-            self.max_delay,
-            self.avg_delay
-        ))
+            logger.debug("Delay: current: {} min: {} max: {} avg: {}".format(
+                time_delay,
+                self.min_delay,
+                self.max_delay,
+                self.avg_delay
+            ))
 
     def main_loop_controller(self, udp):
         while True:
@@ -82,7 +81,7 @@ class JaggerServer(object):
         udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         orig = (self.host, self.port)
         udp.bind(orig)
-        # initialize_keyboard()
+        initialize_keyboard()
         try:
             self.main_loop_controller(udp)
         except Exception as e:
@@ -93,5 +92,5 @@ class JaggerServer(object):
 
 
 if __name__ == '__main__':
-    server = JaggerServer(host='', port=8765)
+    server = JaggerServer(host='', port=8865)
     server.run()

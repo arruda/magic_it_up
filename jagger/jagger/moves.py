@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
+
 import keyboard
 
 from constants import ALLOWED_KEYS
+
+
+logger = logging.getLogger("jagger_moves")
 
 PRESSED_KEYS = set([
 ])
@@ -43,7 +48,6 @@ def press_keys(keys):
 
     keys_to_release = prepare_release_keys_list(keys)
     if len(keys_to_release) != 0:
-        print("releasing keys: %s" % keys_to_release)
         keyboard.release(",".join(keys_to_release))
         PRESSED_KEYS.difference_update(set(keys_to_release))
 
@@ -51,6 +55,6 @@ def press_keys(keys):
     if len(new_keys) != 0 and '' not in new_keys:
         PRESSED_KEYS.update(keys)
         keys_to_press = ",".join(new_keys)
-        print("pressing new: %s" % new_keys)
         keyboard.press(keys_to_press)
-    print("current pressed keys: %s" % PRESSED_KEYS)
+
+    logger.debug("current pressed keys: %s" % PRESSED_KEYS)
